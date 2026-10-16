@@ -1,3 +1,4 @@
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import tkinter as tk
@@ -45,7 +46,7 @@ root.configure(bg="#eef2f7")
 # Dashboard title
 tk.Label(
     root,
-    text="TRAFFIC ACCIDENT DASHBOARD",
+    text="TRAFFIC ACCIDENT SEVERITY PREDICTION",
     font=("Arial", 20, "bold"),
     bg="#1f3a5f",
     fg="white",
@@ -156,40 +157,106 @@ tk.Button(
     pady=8
 ).grid(row=4, column=0, columnspan=2, pady=15)
 
-# 7. Graph 1 - Severity distribution
+# 7. Graph 1 - Severity Distribution
 def show_severity():
     counts = df["Severity"].value_counts().reindex(
         ["Minor", "Moderate", "Severe"], fill_value=0
     )
 
-    plt.figure(figsize=(6, 4))
-    counts.plot(kind="bar", color=["green", "orange", "red"])
+    plt.figure(figsize=(7, 5))
+    bars = plt.bar(
+        counts.index,
+        counts.values,
+        color=["green", "orange", "red"]
+    )
 
-    plt.title("Accident Severity Distribution")
+    plt.title("Accident Severity Distribution - 15 Accidents")
     plt.xlabel("Severity")
     plt.ylabel("Number of Accidents")
+
+    # Y-axis from 0 to 15
+    plt.yticks(range(0, 16, 1))
+    plt.ylim(0, 15)
+
+    # Show labels only for non-zero bars
+    labels = [
+        str(int(bar.get_height())) if bar.get_height() > 0 else ""
+        for bar in bars
+    ]
+    plt.bar_label(bars, labels=labels, padding=3)
+
     plt.tight_layout()
     plt.show()
 
-# 8. Graph 2 - Weather analysis
+# 8. Graph 2 - Weather vs Severity
 def show_weather():
     table = pd.crosstab(df["Weather"], df["Severity"])
 
-    table.plot(kind="bar")
-    plt.title("Weather vs Accident Severity")
+    table = table.reindex(
+        index=["Clear", "Rainy", "Foggy"],
+        columns=["Minor", "Moderate", "Severe"],
+        fill_value=0
+    )
+
+    ax = table.plot(
+        kind="bar",
+        figsize=(8, 5),
+        color=["green", "orange", "red"]
+    )
+
+    plt.title("Weather vs Accident Severity - 15 Accidents")
     plt.xlabel("Weather")
     plt.ylabel("Number of Accidents")
+
+    # Y-axis from 0 to 15
+    plt.yticks(range(0, 16, 1))
+    plt.ylim(0, 15)
+
+    # Show labels only for non-zero bars
+    for container in ax.containers:
+        labels = [
+            str(int(bar.get_height())) if bar.get_height() > 0 else ""
+            for bar in container
+        ]
+        ax.bar_label(container, labels=labels, padding=3)
+
+    plt.legend(title="Severity")
     plt.tight_layout()
     plt.show()
 
-# 9. Graph 3 - Road type analysis
+# 9. Graph 3 - Road Type vs Severity
 def show_road():
     table = pd.crosstab(df["Road"], df["Severity"])
 
-    table.plot(kind="bar")
-    plt.title("Road Type vs Accident Severity")
+    table = table.reindex(
+        index=["Urban", "Highway", "Rural"],
+        columns=["Minor", "Moderate", "Severe"],
+        fill_value=0
+    )
+
+    ax = table.plot(
+        kind="bar",
+        figsize=(8, 5),
+        color=["green", "orange", "red"]
+    )
+
+    plt.title("Road Type vs Accident Severity - 15 Accidents")
     plt.xlabel("Road Type")
     plt.ylabel("Number of Accidents")
+
+    # Y-axis from 0 to 15
+    plt.yticks(range(0, 16, 1))
+    plt.ylim(0, 15)
+
+    # Show labels only for non-zero bars
+    for container in ax.containers:
+        labels = [
+            str(int(bar.get_height())) if bar.get_height() > 0 else ""
+            for bar in container
+        ]
+        ax.bar_label(container, labels=labels, padding=3)
+
+    plt.legend(title="Severity")
     plt.tight_layout()
     plt.show()
 
